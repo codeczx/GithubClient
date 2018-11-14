@@ -1,0 +1,51 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+
+buildscript {
+    
+    repositories {
+        google()
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:3.2.1'
+        
+
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        jcenter()
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
+// Define versions in a single place
+ext {
+    // Sdk and tools
+    // Support library and architecture components support minSdk 14 and above.
+    minSdkVersion = 28
+    targetSdkVersion = 28
+    compileSdkVersion = 28
+    buildToolsVersion = '28.0.3'
+
+    constraintLayoutVersion = '2.0.0-alpha2'
+    legacySupportVersion = '1.0.0'
+    supportLibraryVersion = '1.0.2'
+    materialVersion = '1.0.0'
+
+    lifecycleVersion = '2.0.0'
+    recyclerViewVersion = '1.0.0'
+    roomVersion = '2.0.0-alpha1'
+
+    glideVersion = '4.8.0'
+    gsonVersion = '2.8.2'
+
+    retrofitVersion = '2.4.0'
+    loggingInterceptorVersion = '3.11.0'
+}
