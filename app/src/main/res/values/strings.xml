@@ -1,3 +1,5 @@
 <resources>
 	<string name="app_name">GitHubDemo</string>
+	<string name="none"/>
+	<string name="hint_search_user">搜索用户</string>
 </resources>

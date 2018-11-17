@@ -1,16 +1,18 @@
 package io.github.githubclient.repos;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
-import android.text.style.ReplacementSpan;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.TextView;
 
 import java.util.List;
 
-import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import io.github.githubclient.ViewModelFactory;
@@ -32,6 +34,12 @@ public class ReposFragment extends Fragment {
 	}
 
 	@Override
+	public void onResume() {
+		super.onResume();
+		mReposViewModel.start();
+	}
+
+	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		mReposViewModel = obtainViewModel(getActivity());
 		mReposFragBinding = FragReposBinding.inflate(inflater, container, false);
@@ -48,12 +56,38 @@ public class ReposFragment extends Fragment {
 	}
 
 	private void subscribeUi() {
-		mReposViewModel.getReposData().observe(getViewLifecycleOwner(), new Observer<List<ReposEntity>>() {
+
+		mReposFragBinding.etName.setOnEditorActionListener(new TextView.OnEditorActionListener() {
 			@Override
-			public void onChanged(List<ReposEntity> reposEntities) {
-				mReposAdapter.submitList(reposEntities);
+			public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+				if(actionId == EditorInfo.IME_ACTION_SEARCH){
+					mReposViewModel.getNewSearchEvent().setValue(v.getText().toString());
+					hideSoftInput();
+				}
+				return false;
 			}
 		});
+
+		mReposViewModel.getReposData().observe(getViewLifecycleOwner(), new Observer<List<ReposEntity>>() {
+			@Override
+			public void onChanged(List<ReposEntity> reposEntityEntities) {
+				mReposAdapter.submitList(reposEntityEntities);
+			}
+		});
+
+		mReposViewModel.getNewSearchEvent().observe(this, new Observer<String>() {
+			@Override
+			public void onChanged(String s) {
+				mReposViewModel.getRepos();
+			}
+		});
+	}
+
+	private void hideSoftInput() {
+		InputMethodManager inputMethodManager = (InputMethodManager) getContext()
+				.getSystemService(Context.INPUT_METHOD_SERVICE);
+		assert inputMethodManager != null;
+		inputMethodManager.toggleSoftInput(0,InputMethodManager.HIDE_NOT_ALWAYS);
 	}
 
 	private static ReposViewModel obtainViewModel(Activity activity) {

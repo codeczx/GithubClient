@@ -2,12 +2,16 @@ package io.github.githubclient.data;
 
 import com.google.gson.annotations.SerializedName;
 
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
 /**
  * Created by codeczx on 2018/11/14 下午 08:42.
  * Class description:
  */
-public class ReposEntity {
 
+public class ReposEntity {
 
 	/**
 	 * id : 3582580
