@@ -1,4 +1,4 @@
-package io.github.githubclient.repos;
+package io.github.githubclient.repo;
 
 import android.app.Activity;
 import android.content.Context;
@@ -16,69 +16,69 @@ import java.util.List;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import io.github.githubclient.ViewModelFactory;
-import io.github.githubclient.data.ReposEntity;
-import io.github.githubclient.databinding.FragReposBinding;
+import io.github.githubclient.databinding.FragRepoBinding;
+import io.github.githubclient.vo.Repo;
+import io.github.githubclient.vo.Resource;
 
 /**
  * Created by codeczx on 2018/11/14 下午 07:48.
  * Class description:
  */
-public class ReposFragment extends Fragment {
+public class RepoFragment extends Fragment {
 
-	private FragReposBinding mReposFragBinding;
-	private ReposViewModel mReposViewModel;
-	private ReposAdapter mReposAdapter;
+	private FragRepoBinding mRepoFragBinding;
+	private RepoViewModel mRepoViewModel;
+	private RepoAdapter mRepoAdapter;
 
-	public static ReposFragment newInstance() {
-		return new ReposFragment();
+	public static RepoFragment newInstance() {
+		return new RepoFragment();
 	}
 
 	@Override
 	public void onResume() {
 		super.onResume();
-		mReposViewModel.start();
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		mReposViewModel = obtainViewModel(getActivity());
-		mReposFragBinding = FragReposBinding.inflate(inflater, container, false);
-		mReposFragBinding.setViewModel(mReposViewModel);
-		return mReposFragBinding.getRoot();
+		mRepoViewModel = obtainViewModel(getActivity());
+		mRepoFragBinding = FragRepoBinding.inflate(inflater, container, false);
+		mRepoFragBinding.setViewModel(mRepoViewModel);
+		return mRepoFragBinding.getRoot();
 	}
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		mReposAdapter = new ReposAdapter(new ReposDiffCallback());
-		mReposFragBinding.rvRepos.setAdapter(mReposAdapter);
+		mRepoAdapter = new RepoAdapter(new RepoDiffCallback());
+		mRepoFragBinding.rvRepo.setAdapter(mRepoAdapter);
 		subscribeUi();
 	}
 
 	private void subscribeUi() {
-
-		mReposFragBinding.etName.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+		//TODO:处理loading情况
+		mRepoFragBinding.etName.setOnEditorActionListener(new TextView.OnEditorActionListener() {
 			@Override
 			public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-				if(actionId == EditorInfo.IME_ACTION_SEARCH){
-					mReposViewModel.getNewSearchEvent().setValue(v.getText().toString());
+				if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+					mRepoViewModel.getNewSearchEvent().setValue(v.getText().toString());
 					hideSoftInput();
 				}
 				return false;
 			}
 		});
 
-		mReposViewModel.getReposData().observe(getViewLifecycleOwner(), new Observer<List<ReposEntity>>() {
+		mRepoViewModel.getResults().observe(this, new Observer<Resource<List<Repo>>>() {
 			@Override
-			public void onChanged(List<ReposEntity> reposEntityEntities) {
-				mReposAdapter.submitList(reposEntityEntities);
+			public void onChanged(Resource<List<Repo>> listResource) {
+				mRepoAdapter.submitList(listResource.data);
 			}
 		});
 
-		mReposViewModel.getNewSearchEvent().observe(this, new Observer<String>() {
+		mRepoViewModel.getNewSearchEvent().observe(this, new Observer<String>() {
 			@Override
 			public void onChanged(String s) {
-				mReposViewModel.getRepos();
+				mRepoViewModel.setQuery(s);
 			}
 		});
 	}
@@ -87,11 +87,11 @@ public class ReposFragment extends Fragment {
 		InputMethodManager inputMethodManager = (InputMethodManager) getContext()
 				.getSystemService(Context.INPUT_METHOD_SERVICE);
 		assert inputMethodManager != null;
-		inputMethodManager.toggleSoftInput(0,InputMethodManager.HIDE_NOT_ALWAYS);
+		inputMethodManager.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
 	}
 
-	private static ReposViewModel obtainViewModel(Activity activity) {
+	private static RepoViewModel obtainViewModel(Activity activity) {
 		ViewModelFactory viewModelFactory = ViewModelFactory.getInstance(activity.getApplication());
-		return viewModelFactory.create(ReposViewModel.class);
+		return viewModelFactory.create(RepoViewModel.class);
 	}
 }

@@ -4,7 +4,7 @@ import android.app.Application;
 
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
-import io.github.githubclient.repos.ReposViewModel;
+import io.github.githubclient.repo.RepoViewModel;
 
 /**
  * Created by codeczx on 2018/11/14 下午 07:33.
@@ -32,8 +32,8 @@ public class ViewModelFactory extends ViewModelProvider.NewInstanceFactory {
 
 	@Override
 	public <T extends ViewModel> T create(Class<T> modelClass) {
-		if (modelClass.isAssignableFrom(ReposViewModel.class)) {
-			return (T) new ReposViewModel(mApplication);
+		if (modelClass.isAssignableFrom(RepoViewModel.class)) {
+			return (T) new RepoViewModel(mApplication);
 		}
 		throw new IllegalArgumentException("Unknown ViewModel class: " + modelClass.getName());
 	}

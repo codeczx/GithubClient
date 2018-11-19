@@ -4,8 +4,8 @@
 
 	<data>
 		<variable
-			name="reposEntity"
-			type="io.github.githubclient.data.ReposEntity"/>
+			name="repo"
+			type="io.github.githubclient.vo.Repo"/>
 	</data>
 
 	<androidx.cardview.widget.CardView
@@ -20,7 +20,7 @@
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:padding="16dp"
-			android:text="@{reposEntity.full_name}"/>
+			android:text="@{repo.fullName}"/>
 
 	</androidx.cardview.widget.CardView>
 </layout>

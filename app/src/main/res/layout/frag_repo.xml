@@ -7,7 +7,7 @@
 
 		<variable
 			name="viewModel"
-			type="io.github.githubclient.repos.ReposViewModel"/>
+			type="io.github.githubclient.repo.RepoViewModel"/>
 	</data>
 	
 	<LinearLayout android:orientation="vertical"
@@ -42,7 +42,7 @@
 		</LinearLayout>
 
 		<androidx.recyclerview.widget.RecyclerView
-			android:id="@+id/rv_repos"
+			android:id="@+id/rv_repo"
 			android:layout_width="match_parent"
 			android:layout_height="match_parent"
 			android:layout_marginTop="8dp"

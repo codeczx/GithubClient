@@ -1,7 +1,8 @@
-package io.github.githubclient.data;
+package io.github.githubclient.api;
 
 import java.util.List;
 
+import io.github.githubclient.vo.Repo;
 import io.reactivex.Flowable;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -19,12 +20,13 @@ public class ApiRepository {
 	private static volatile ApiRepository INSTANCE;
 	private OkHttpClient mOkHttpClient = getOkHttpClient();
 
-	private ApiRepository(){}
+	private ApiRepository() {
+	}
 
 	public static ApiRepository getInstance() {
-		if(INSTANCE==null){
-			synchronized (ApiRepository.class){
-				if(INSTANCE == null){
+		if (INSTANCE == null) {
+			synchronized (ApiRepository.class) {
+				if (INSTANCE == null) {
 					INSTANCE = new ApiRepository();
 				}
 			}
@@ -34,23 +36,23 @@ public class ApiRepository {
 
 	private OkHttpClient getOkHttpClient() {
 		HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
-		interceptor.setLevel(HttpLoggingInterceptor.Level.BASIC);
+		interceptor.setLevel(HttpLoggingInterceptor.Level.HEADERS);
 		return new OkHttpClient.Builder()
 				.addInterceptor(interceptor)
 				.build();
 	}
 
-	private ApiService getReposApi(){
+	private GithubService getRepoApi() {
 		Retrofit retrofit = new Retrofit.Builder()
 				.addCallAdapterFactory(RxJava2CallAdapterFactory.create())
 				.addConverterFactory(GsonConverterFactory.create())
 				.baseUrl(BASE_URL)
 				.client(mOkHttpClient)
 				.build();
-		return retrofit.create(ApiService.class);
+		return retrofit.create(GithubService.class);
 	}
 
-	public Flowable<List<ReposEntity>> getRepos(String name){
-		return getReposApi().getRepos(name);
+	public Flowable<List<Repo>> getRepo(String name) {
+		return getRepoApi().getRepo(name);
 	}
 }

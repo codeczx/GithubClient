@@ -1,12 +1,11 @@
 package io.github.githubclient;
 
-
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import io.github.githubclient.repos.ReposFragment;
+import io.github.githubclient.repo.RepoFragment;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -19,10 +18,10 @@ public class MainActivity extends AppCompatActivity {
 	}
 
 	private void setUpFragment() {
-		ReposFragment reposFragment = ReposFragment.newInstance();
+		RepoFragment repoFragment = RepoFragment.newInstance();
 		FragmentManager fragmentManager = getSupportFragmentManager();
 		FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-		fragmentTransaction.replace(R.id.fl_content, reposFragment);
+		fragmentTransaction.replace(R.id.fl_content, repoFragment);
 		fragmentTransaction.commit();
 	}
 }
